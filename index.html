@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marks Percentage Calculator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="calculator-container">
+        <h1>Marks Percentage Calculator</h1>
+        <form id="marks-form">
+            <!-- Dynamic rows for subject input -->
+            <div id="subject-rows">
+                <div class="subject-row">
+                    <label for="subject-name">Subject Name:</label>
+                    <input type="text" class="subject-name" name="subject-name" required>
+                    <br>
+                    <label for="marks-scored">Marks Scored:</label>
+                    <input type="number" class="marks-scored" name="marks-scored" min="0" max="100" required>
+                    <br>
+                    <label for="total-marks">Total Marks:</label>
+                    <input type="number" class="total-marks" name="total-marks" min="0" max="100" required>
+                </div>
+            </div>
+
+            <button type="button" id="add-subject-btn">Add New Subject</button>
+            <br>
+            <button type="button" id="clear-subjects-btn">Clear All Subjects</button>
+            <br>
+            <button type="button" id="delete-subject-btn">Delete Last Subject</button>
+
+            <button type="submit">Calculate Percentage</button>
+        </form>
+
+        <div id="result-container" class="result-container">
+            <p id="result-text"></p>
+        </div>
+
+        <div class="copyright">
+            <p>&copy;  Kunal Pattarwal. <br> <br>All rights reserved.</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const addSubjectBtn = document.getElementById("add-subject-btn");
+            const clearSubjectsBtn = document.getElementById("clear-subjects-btn");
+            const deleteSubjectBtn = document.getElementById("delete-subject-btn");
+            const marksForm = document.getElementById("marks-form");
+            const resultText = document.getElementById("result-text");
+            const subjectRows = document.getElementById("subject-rows");
+
+            addSubjectBtn.addEventListener("click", function () {
+                const newSubjectRow = document.createElement("div");
+                newSubjectRow.classList.add("subject-row");
+
+                newSubjectRow.innerHTML = `
+                    <label for="subject-name">Subject Name:</label>
+                    <input type="text" class="subject-name" name="subject-name" required>
+                    <br>
+                    <label for="marks-scored">Marks Scored:</label>
+                    <input type="number" class="marks-scored" name="marks-scored" min="0" max="100" required>
+                    <br>
+                    <label for="total-marks">Total Marks:</label>
+                    <input type="number" class="total-marks" name="total-marks" min="0" max="100" required>
+                `;
+
+                subjectRows.appendChild(newSubjectRow);
+            });
+
+            clearSubjectsBtn.addEventListener("click", function () {
+                subjectRows.innerHTML = ''; // Clear all entries
+                // Add an initial empty row
+                const initialRow = document.createElement("div");
+                initialRow.classList.add("subject-row");
+
+                initialRow.innerHTML = `
+                    <label for="subject-name">Subject Name:</label>
+                    <input type="text" class="subject-name" name="subject-name" required>
+                    <br>
+                    <label for="marks-scored">Marks Scored:</label>
+                    <input type="number" class="marks-scored" name="marks-scored" min="0" max="100" required>
+                    <br>
+                    <label for="total-marks">Total Marks:</label>
+                    <input type="number" class="total-marks" name="total-marks" min="0" max="100" required>
+                `;
+
+                subjectRows.appendChild(initialRow);
+            });
+
+            deleteSubjectBtn.addEventListener("click", function () {
+                const subjectRowsCount = subjectRows.children.length;
+                if (subjectRowsCount > 1) {
+                    subjectRows.removeChild(subjectRows.lastChild);
+                }
+            });
+
+            marksForm.addEventListener("submit", function (event) {
+                event.preventDefault();
+
+                const subjectRows = document.querySelectorAll(".subject-row");
+                let totalMarks = 0;
+                let marksScored = 0;
+
+                subjectRows.forEach(function (row) {
+                    const marksInput = row.querySelector(".marks-scored");
+                    const totalInput = row.querySelector(".total-marks");
+
+                    marksScored += parseFloat(marksInput.value);
+                    totalMarks += parseFloat(totalInput.value);
+                });
+
+                const percentage = (marksScored / totalMarks) * 100;
+                resultText.textContent = `Your overall percentage is: ${percentage.toFixed(2)}%`;
+            });
+        });
+    </script>
+</body>
+</html>
